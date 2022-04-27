@@ -12,10 +12,10 @@ namespace ProEventos.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class EventoController : ControllerBase
+    public class EventosController : ControllerBase
     {
         private readonly DataContext _context;
-        public EventoController(DataContext context)
+        public EventosController(DataContext context)
         {
             _context = context;
         }
@@ -36,6 +36,17 @@ namespace ProEventos.API.Controllers
                 .Where(evento => evento.EventoId == id)
                 .AsNoTracking()
                 .SingleOrDefault();
+        }
+
+        [HttpPost]
+        [Route("")]
+        public void Create([FromBody]Evento model)
+        {
+            if(ModelState.IsValid)
+            {
+                _context.Eventos.Add(model);
+                _context.SaveChanges();
+            }
         }
     }
 }
