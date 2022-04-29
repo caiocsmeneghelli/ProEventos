@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -47,6 +49,16 @@ namespace ProEventos.API.Controllers
                 _context.Eventos.Add(model);
                 _context.SaveChanges();
             }
+        }
+        
+        [HttpDelete]
+        [Route("{id}")]
+        public ActionResult Delete(int id)
+        {
+            var evento = _context.Eventos.Single(reg => reg.EventoId == id);
+            _context.Eventos.Remove(evento);
+            _context.SaveChanges();
+            return Ok();
         }
     }
 }
