@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using ProEventos.API.Data;
-using ProEventos.API.Models;
+using ProEventos.Domain.Models;
+using ProEventos.Persistence;
 
 namespace ProEventos.API.Controllers
 {
@@ -35,7 +30,7 @@ namespace ProEventos.API.Controllers
         {
             return _context
                 .Eventos
-                .Where(evento => evento.EventoId == id)
+                .Where(reg => reg.Id == id)
                 .AsNoTracking()
                 .SingleOrDefault();
         }
@@ -55,7 +50,7 @@ namespace ProEventos.API.Controllers
         [Route("{id}")]
         public ActionResult Delete(int id)
         {
-            var evento = _context.Eventos.Single(reg => reg.EventoId == id);
+            var evento = _context.Eventos.Single(reg => reg.Id == id);
             _context.Eventos.Remove(evento);
             _context.SaveChanges();
             return Ok();
