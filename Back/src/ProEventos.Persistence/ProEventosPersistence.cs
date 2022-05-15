@@ -1,4 +1,6 @@
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using ProEventos.Domain.Models;
 
 namespace ProEventos.Persistence
@@ -34,17 +36,48 @@ namespace ProEventos.Persistence
         }
 
         // Eventos
-        public Task<Evento> GetEventoByIdAsync(int eventoId, bool includePalestrantes)
+        public async Task<Evento> GetEventoByIdAsync(int eventoId, bool includePalestrantes = false)
         {
-            throw new System.NotImplementedException();
+            IQueryable<Evento> query = _context.Eventos
+                .Include(reg => reg.Lotes)
+                .Include(reg => reg.RedesSociais);
+            
+            if(includePalestrantes)
+                query = query.Include(reg => reg.PalestrantesEventos)
+                .ThenInclude(reg => reg.Palestrante);
+
+            query = query
+                .OrderBy(reg => reg.Id)
+                .Where(reg => reg.Id == eventoId);
+            return await query.FirstOrDefaultAsync();
         }
-        public Task<Evento[]> GetAllEventosAsync(bool includePalestrantes)
+        public async Task<Evento[]> GetAllEventosAsync(bool includePalestrantes = false)
         {
-            throw new System.NotImplementedException();
+            IQueryable<Evento> query = _context.Eventos
+                .Include(reg => reg.Lotes)
+                .Include(reg => reg.RedesSociais);
+            
+            if(includePalestrantes)
+                query = query.Include(reg => reg.PalestrantesEventos)
+                .ThenInclude(reg => reg.Palestrante);
+
+            query = query.OrderBy(reg => reg.Id);
+            return await query.ToArrayAsync();
         }
-        public Task<Evento[]> GetAllEventosByTemaAsync(string tema, bool includePalestrantes)
+        public async Task<Evento[]> GetAllEventosByTemaAsync(string tema, bool includePalestrantes = false)
         {
-            throw new System.NotImplementedException();
+            IQueryable<Evento> query = _context.Eventos
+                .Include(reg => reg.Lotes)
+                .Include(reg => reg.RedesSociais);
+            
+            if(includePalestrantes)
+                query = query.Include(reg => reg.PalestrantesEventos)
+                .ThenInclude(reg => reg.Palestrante);
+
+            query = query
+                .OrderBy(reg => reg.Id)
+                .Where(reg => reg.Tema.ToLower().Contains(tema.ToLower()));
+            return await query.ToArrayAsync();
         }
 
         // Paleestrantes
