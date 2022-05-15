@@ -81,17 +81,41 @@ namespace ProEventos.Persistence
         }
 
         // Paleestrantes
-        public Task<Palestrante> GetPalestranteByIdAsync(int palestranteId, bool includeEventos)
+        public async Task<Palestrante> GetPalestranteByIdAsync(int palestranteId, bool includeEventos)
         {
-            throw new System.NotImplementedException();
+            IQueryable<Palestrante> query = _context.Palestrantes
+                .Include(reg => reg.RedesSociais);
+            
+            if(includeEventos)
+                query = query.Include(reg => reg.PalestrantesEventos)
+                .ThenInclude(reg => reg.Evento);
+
+            return await query.FirstOrDefaultAsync();
         }
-        public Task<Palestrante[]> GetAllPalestrantesAsync(bool includeEventos)
+        public async Task<Palestrante[]> GetAllPalestrantesAsync(bool includeEventos)
         {
-            throw new System.NotImplementedException();
+            IQueryable<Palestrante> query = _context.Palestrantes
+                .Include(reg => reg.RedesSociais);
+            
+            if(includeEventos)
+                query = query.Include(reg => reg.PalestrantesEventos)
+                .ThenInclude(reg => reg.Evento);
+
+            query = query.OrderBy(reg => reg.Id);
+            return await query.ToArrayAsync();
         }
-        public Task<Palestrante[]> GetAllPalestrantesByNomeAsync(string nome, bool includeEventos)
+        public async Task<Palestrante[]> GetAllPalestrantesByNomeAsync(string nome, bool includeEventos)
         {
-            throw new System.NotImplementedException();
+            IQueryable<Palestrante> query = _context.Palestrantes
+                .Include(reg => reg.RedesSociais);
+            
+            if(includeEventos)
+                query = query.Include(reg => reg.PalestrantesEventos)
+                .ThenInclude(reg => reg.Evento);
+
+            query = query.OrderBy(reg => reg.Id)
+                .Where(reg => reg.Nome.ToLower().Contains(nome.ToLower()));
+            return await query.ToArrayAsync();
         }
     }
 }

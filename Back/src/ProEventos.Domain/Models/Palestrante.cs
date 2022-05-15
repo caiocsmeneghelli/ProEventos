@@ -10,7 +10,7 @@ namespace ProEventos.Domain.Models
         public string ImagemUrl { get; set; }
         public string Telefone { get; set; }
         public string Email { get; set; }
-        public IEnumerable<RedeSocial> RedeSocial { get; set; }
+        public IEnumerable<RedeSocial> RedesSociais { get; set; }
         public IEnumerable<PalestranteEvento> PalestrantesEventos { get; set; }
     }
 }
