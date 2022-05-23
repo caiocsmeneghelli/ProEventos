@@ -2,13 +2,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ProEventos.Domain.Models;
+using ProEventos.Persistence.Contratos;
 
 namespace ProEventos.Persistence
 {
-    public class PaleestrantesPersistence : ProEventosPersistence
+    public class PalestrantesPersistence : IPalestrantePersis
     {
-        public PaleestrantesPersistence(ProEventosContext Context) : base(Context)
-        { }
+        public ProEventosContext _context { get; }
+
+        public PalestrantesPersistence(ProEventosContext Context)
+        {
+            _context = Context;
+        }
         
         public async Task<Palestrante> GetPalestranteByIdAsync(int palestranteId, bool includeEventos)
         {

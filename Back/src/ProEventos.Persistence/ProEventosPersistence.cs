@@ -8,7 +8,7 @@ namespace ProEventos.Persistence
 {
     public class ProEventosPersistence : IProEventosPersist
     {
-        protected ProEventosContext _context { get; }
+        public ProEventosContext _context { get; }
 
         public ProEventosPersistence(ProEventosContext Context)
         {
