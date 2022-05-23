@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProEventos.Domain.Models;
-using ProEventos.Persistence;
+using ProEventos.Persistence.Contextos;
 
 namespace ProEventos.API.Controllers
 {
