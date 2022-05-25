@@ -111,7 +111,7 @@ namespace ProEventos.API.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        public async ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
             try
             {
