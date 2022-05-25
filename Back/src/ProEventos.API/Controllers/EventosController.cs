@@ -74,30 +74,57 @@ namespace ProEventos.API.Controllers
             }
         }
 
-        // [HttpPost]
-        // [Route("")]
-        // public async Task<IActionResult> Create([FromBody]Evento model)
-        // {
-        //     try
-        //     {
-        //         if(!ModelState.IsValid)
-        //             return BadRequest()
-        //     }
-        //     catch (System.Exception)
-        //     {
-                
-        //         throw;
-        //     }
-        // }
+        [HttpPost]
+        [Route("")]
+        public async Task<IActionResult> Create([FromBody]Evento model)
+        {
+            try
+            {
+                var evento = await _eventoService.AddEventos(model);
+                if(evento == null) return BadRequest("Erro ao tentar adicionar evento.");
+                return this.StatusCode(StatusCodes.Status201Created, evento);
+            }
+            catch (System.Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError,
+                    $"Erro ao tentar criar um evento. Erro: {ex.Message}");
+            }
+        }
         
-        // [HttpDelete]
-        // [Route("{id}")]
-        // public ActionResult Delete(int id)
-        // {
-        //     var evento = _context.Eventos.Single(reg => reg.Id == id);
-        //     _context.Eventos.Remove(evento);
-        //     _context.SaveChanges();
-        //     return Ok();
-        // }
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<IActionResult> Put(int id, [FromBody]Evento model)
+        {
+            try
+            {
+                var evento = await _eventoService.UpdateEvento(id, model);
+                if(evento == null)
+                    return NotFound($"Nenhum evento com o Id {id} encontrado.");
+                return Ok(evento);
+            }
+            catch (System.Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError,
+                    $"Erro ao tentar atualizar um evento. Erro: {ex.Message}");
+            }
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async ActionResult Delete(int id)
+        {
+            try
+            {
+                if(await _eventoService.DeleteEvento(id))
+                    return Ok();
+                else
+                    return BadRequest("Evento não deletado.");
+            }
+            catch (System.Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError,
+                    $"Erro ao tentar deletar um evento. Erro: {ex.Message}");
+            }
+        }
     }
 }
