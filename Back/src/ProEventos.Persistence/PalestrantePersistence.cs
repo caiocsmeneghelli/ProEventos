@@ -25,7 +25,7 @@ namespace ProEventos.Persistence
                 query = query.Include(reg => reg.PalestrantesEventos)
                 .ThenInclude(reg => reg.Evento);
 
-            return await query.FirstOrDefaultAsync();
+            return await query.AsNoTracking().FirstOrDefaultAsync();
         }
         public async Task<Palestrante[]> GetAllPalestrantesAsync(bool includeEventos)
         {
@@ -37,7 +37,7 @@ namespace ProEventos.Persistence
                 .ThenInclude(reg => reg.Evento);
 
             query = query.OrderBy(reg => reg.Id);
-            return await query.ToArrayAsync();
+            return await query.AsNoTracking().ToArrayAsync();
         }
         public async Task<Palestrante[]> GetAllPalestrantesByNomeAsync(string nome, bool includeEventos)
         {
@@ -50,7 +50,7 @@ namespace ProEventos.Persistence
 
             query = query.OrderBy(reg => reg.Id)
                 .Where(reg => reg.Nome.ToLower().Contains(nome.ToLower()));
-            return await query.ToArrayAsync();
+            return await query.AsNoTracking().ToArrayAsync();
         }
     }
 }
